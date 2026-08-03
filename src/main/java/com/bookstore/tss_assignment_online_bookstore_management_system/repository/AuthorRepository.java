@@ -12,4 +12,6 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     boolean existsByName(String name);
 
     List<Author> findByStatus(Status status);
+
+    boolean existsById(Long authorId);
 }

@@ -55,28 +55,15 @@ public class BookSpecification {
         };
     }
 
-    public static Specification<Book> hasMinPrice(Double minPrice) {
+    public static Specification<Book> hasPrice(Double price) {
         return (root, query, criteriaBuilder) -> {
-            if (minPrice == null) {
+            if (price == null) {
                 return criteriaBuilder.conjunction();
             }
 
             return criteriaBuilder.greaterThanOrEqualTo(
                     root.get("price"),
-                    minPrice
-            );
-        };
-    }
-
-    public static Specification<Book> hasMaxPrice(Double maxPrice) {
-        return (root, query, criteriaBuilder) -> {
-            if (maxPrice == null) {
-                return criteriaBuilder.conjunction();
-            }
-
-            return criteriaBuilder.lessThanOrEqualTo(
-                    root.get("price"),
-                    maxPrice
+                    price
             );
         };
     }
