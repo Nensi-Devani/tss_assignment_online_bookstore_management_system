@@ -26,7 +26,4 @@ public class UserProfileRequestDto {
     @Size(max = 255, message = "Avatar path cannot exceed 255 characters.")
     private String avatarPath;
 
-    @NotNull(message = "User ID is required.")
-    private Long userId;
-
 }

@@ -9,11 +9,11 @@ public interface UserProfileService {
 
     UserProfileResponseDto create(Long userId, UserProfileRequestDto requestDto);
 
-    UserProfileResponseDto getById(Long userProfileId);
+    UserProfileResponseDto getByUserId(Long userId);
 
     Page<UserProfileResponseDto> getAll(Pageable pageable);
 
-    UserProfileResponseDto update(Long userProfileId, UserProfileRequestDto requestDto);
+    UserProfileResponseDto update(Long userId, UserProfileRequestDto requestDto);
 
-    void delete(Long userProfileId);
+    void deleteByUserId(Long userId);
 }

@@ -40,8 +40,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public UserProfileResponseDto getById(Long userProfileId) {
-        UserProfile userProfile = userProfileRepository.findById(userProfileId)
+    public UserProfileResponseDto getByUserId(Long userId) {
+        UserProfile userProfile = userProfileRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User profile not found."));
 
         return userProfileMapper.toResponseDto(userProfile);
@@ -54,22 +54,21 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public UserProfileResponseDto update(Long userProfileId, UserProfileRequestDto requestDto) {
-        UserProfile userProfile = userProfileRepository.findById(userProfileId)
+    public UserProfileResponseDto update(Long userId, UserProfileRequestDto requestDto) {
+        UserProfile userProfile = userProfileRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User profile not found."));
 
         userProfileMapper.updateEntity(requestDto, userProfile);
+        userProfile = userProfileRepository.save(userProfile);
 
-        return userProfileMapper.toResponseDto(userProfileRepository.save(userProfile));
+        return userProfileMapper.toResponseDto(userProfile);
     }
 
     @Override
-    public void delete(Long userProfileId) {
-        UserProfile userProfile = userProfileRepository.findById(userProfileId)
+    public void deleteByUserId(Long userId) {
+        UserProfile userProfile = userProfileRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User profile not found."));
 
-        userProfile.setStatus(Status.DELETED);
-
-        userProfileRepository.save(userProfile);
+        userProfileRepository.delete(userProfile);
     }
 }

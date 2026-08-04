@@ -23,9 +23,9 @@ public class UserProfileController {
         return new ResponseEntity<>(userProfileService.create(userId, requestDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{profileId}")
-    public ResponseEntity<UserProfileResponseDto> getById(@PathVariable Long profileId) {
-        return ResponseEntity.ok(userProfileService.getById(profileId));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserProfileResponseDto> getByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(userProfileService.getByUserId(userId));
     }
 
     @GetMapping
@@ -38,9 +38,9 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfileService.update(userId, requestDto));
     }
 
-    @DeleteMapping("/{profileId}")
-    public ResponseEntity<Void> delete(@PathVariable Long profileId) {
-        userProfileService.delete(profileId);
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity<Void> deleteByUserId(@PathVariable Long userId) {
+        userProfileService.deleteByUserId(userId);
         return ResponseEntity.noContent().build();
     }
 }
