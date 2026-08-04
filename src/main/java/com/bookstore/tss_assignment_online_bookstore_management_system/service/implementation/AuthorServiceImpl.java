@@ -10,6 +10,8 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.Au
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.AuthorRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,63 +22,108 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
+    static final Logger logger = LoggerFactory.getLogger(AuthorServiceImpl.class);
+
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
     @Override
     public AuthorResponseDto create(AuthorRequestDto requestDto) {
+        logger.info("Creating author with name: {}", requestDto.getName());
+
         if (authorRepository.existsByName(requestDto.getName())) {
+            logger.warn("Author already exists with name: {}", requestDto.getName());
             throw new DuplicateResourceException("Author already exists.");
         }
 
         Author author = authorMapper.toEntity(requestDto);
+        Author savedAuthor = authorRepository.save(author);
 
-        return authorMapper.toResponseDto(authorRepository.save(author));
+        logger.info("Author created successfully with Name: {}, ID: {}",savedAuthor.getName(), savedAuthor.getAuthorId());
+
+        return authorMapper.toResponseDto(savedAuthor);
     }
 
     @Override
     public AuthorResponseDto getById(Long authorId) {
+        logger.info("Fetching author with ID: {}", authorId);
+
         Author author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found."));
+                .orElseThrow(() -> {
+                        logger.warn("Author not found with ID: {}", authorId);
+                        return new ResourceNotFoundException("Author not found.");
+                });
+
+        logger.info("Author fetched successfully with ID: {}", authorId);
 
         return authorMapper.toResponseDto(author);
     }
 
     @Override
     public Page<AuthorResponseDto> getAll(Pageable pageable) {
-        return authorRepository.findAll(pageable)
+        logger.info("Fetching all authors. Page: {}, Size: {}",
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+
+        Page<AuthorResponseDto> authors = authorRepository.findAll(pageable)
                 .map(authorMapper::toResponseDto);
+
+        logger.info("Fetched {} authors.", authors.getNumberOfElements());
+
+        return authors;
     }
 
     @Override
     public AuthorResponseDto update(Long authorId, AuthorRequestDto requestDto) {
+        logger.info("Updating author with ID: {}", authorId);
+
         Author author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found."));
+                .orElseThrow(() -> {
+                    logger.warn("Author not found with ID: {}", authorId);
+                    return new ResourceNotFoundException("Author not found.");
+                });
 
         if (!author.getName().equalsIgnoreCase(requestDto.getName()) && authorRepository.existsByName(requestDto.getName())) {
+            logger.warn("Another author already exists with name: {}", requestDto.getName());
             throw new DuplicateResourceException("Author already exists.");
         }
 
         authorMapper.updateEntity(requestDto, author);
+        Author updatedAuthor = authorRepository.save(author);
 
-        return authorMapper.toResponseDto(authorRepository.save(author));
+        logger.info("Author updated successfully with ID: {}", updatedAuthor.getAuthorId());
+
+        return authorMapper.toResponseDto(updatedAuthor);
     }
 
     @Override
     public void delete(Long authorId) {
+        logger.info("Deleting author with ID: {}", authorId);
+
         Author author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found."));
+                .orElseThrow(() -> {
+                    logger.warn("Author not found with ID: {}", authorId);
+                    return new ResourceNotFoundException("Author not found.");
+                });
 
         author.setStatus(Status.DELETED);
 
         authorRepository.save(author);
+
+        logger.info("Author marked as DELETED with ID: {}", authorId);
     }
 
     @Override
     public List<AuthorResponseDto> getAllActiveAuthors() {
-        return authorRepository.findByStatus(Status.ACTIVE)
+        logger.info("Fetching all active authors.");
+
+        List<AuthorResponseDto> authors = authorRepository.findByStatus(Status.ACTIVE)
                 .stream()
                 .map(authorMapper::toResponseDto)
                 .toList();
+
+        logger.info("Fetched {} active authors.", authors.size());
+
+        return authors;
     }
 }
