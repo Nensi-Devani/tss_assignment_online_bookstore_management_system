@@ -20,7 +20,7 @@ public class PublisherRequestDto {
 
     @NotBlank(message = "Phone number is required.")
     @Pattern(
-            regexp = "^[6-9]\\d{9}$",
+            regexp = "^\\d{10}$",
             message = "Phone number must be a valid 10-digit Indian mobile number."
     )
     private String phone;
