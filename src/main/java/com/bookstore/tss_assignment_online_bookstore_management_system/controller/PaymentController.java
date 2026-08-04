@@ -32,15 +32,4 @@ public class PaymentController {
     public ResponseEntity<Page<PaymentResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(paymentService.getAll(pageable));
     }
-
-    @PutMapping("/{paymentId}")
-    public ResponseEntity<PaymentResponseDto> update(@PathVariable Long paymentId, @Valid @RequestBody PaymentRequestDto requestDto) {
-        return ResponseEntity.ok(paymentService.update(paymentId, requestDto));
-    }
-
-    @DeleteMapping("/{paymentId}")
-    public ResponseEntity<Void> delete(@PathVariable Long paymentId) {
-        paymentService.delete(paymentId);
-        return ResponseEntity.noContent().build();
-    }
 }

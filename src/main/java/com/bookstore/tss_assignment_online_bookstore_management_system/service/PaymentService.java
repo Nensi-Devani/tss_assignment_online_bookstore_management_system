@@ -12,8 +12,4 @@ public interface PaymentService {
     PaymentResponseDto getById(Long paymentId);
 
     Page<PaymentResponseDto> getAll(Pageable pageable);
-
-    PaymentResponseDto update(Long paymentId, PaymentRequestDto requestDto);
-
-    void delete(Long paymentId);
 }

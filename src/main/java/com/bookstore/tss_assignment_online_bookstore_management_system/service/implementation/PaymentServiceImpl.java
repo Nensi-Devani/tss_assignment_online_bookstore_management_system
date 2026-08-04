@@ -62,30 +62,4 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findAll(pageable)
                 .map(paymentMapper::toResponseDto);
     }
-
-    @Override
-    @Transactional
-    public PaymentResponseDto update(Long paymentId, PaymentRequestDto requestDto) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment not found."));
-
-        Order order = orderRepository.findById(requestDto.getOrderId())
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
-
-        paymentMapper.updateEntity(requestDto, payment);
-
-        payment.setOrder(order);
-        payment.setAmount(order.getTotalAmount());
-
-        return paymentMapper.toResponseDto(paymentRepository.save(payment));
-    }
-
-    @Override
-    @Transactional
-    public void delete(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment not found."));
-
-        paymentRepository.delete(payment);
-    }
 }
