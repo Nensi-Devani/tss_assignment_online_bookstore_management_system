@@ -18,8 +18,5 @@ public class ReviewResponseDto {
 
     private Integer rating;
 
-    private String comment;
-
-    private Status status;
-
+    private String comment;dd
 }
