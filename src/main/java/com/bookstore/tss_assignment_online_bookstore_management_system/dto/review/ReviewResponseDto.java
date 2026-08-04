@@ -1,6 +1,5 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.dto.review;
 
-import com.bookstore.tss_assignment_online_bookstore_management_system.enums.Status;
 import lombok.Data;
 
 @Data
@@ -18,5 +17,5 @@ public class ReviewResponseDto {
 
     private Integer rating;
 
-    private String comment;dd
+    private String comment;
 }
