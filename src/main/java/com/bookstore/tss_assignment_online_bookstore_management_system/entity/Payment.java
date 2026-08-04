@@ -3,16 +3,15 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.entity;
 import com.bookstore.tss_assignment_online_bookstore_management_system.enums.PaymentMethod;
 import com.bookstore.tss_assignment_online_bookstore_management_system.enums.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name = "payments")
 public class Payment extends BaseEntity{
 

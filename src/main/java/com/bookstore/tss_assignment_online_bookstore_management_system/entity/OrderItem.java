@@ -1,14 +1,13 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name = "order_items")
 public class OrderItem extends BaseEntity{
 

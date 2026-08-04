@@ -115,18 +115,18 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-            Exception exception,
-            HttpServletRequest request) {
-
-        return buildErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                exception.getMessage(),
-                request.getRequestURI(),
-                null
-        );
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleGenericException(
+//            Exception exception,
+//            HttpServletRequest request) {
+//
+//        return buildErrorResponse(
+//                HttpStatus.INTERNAL_SERVER_ERROR,
+//                exception.getMessage(),
+//                request.getRequestURI(),
+//                null
+//        );
+//    }
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(
             HttpStatus status,

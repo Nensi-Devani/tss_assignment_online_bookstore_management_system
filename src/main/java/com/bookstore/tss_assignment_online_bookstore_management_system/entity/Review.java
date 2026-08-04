@@ -2,15 +2,14 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.entity;
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.enums.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import tools.jackson.core.ObjectReadContext;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name = "reviews")
 public class Review extends ObjectReadContext.Base {
 

@@ -2,9 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.entity;
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +11,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name = "orders")
 public class Order extends BaseEntity{
 
