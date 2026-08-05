@@ -1,11 +1,13 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.dto.common;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class PageResponse<T> {
+@Builder
+public class PageResponseDto<T> {
 
     private List<T> content;
 
