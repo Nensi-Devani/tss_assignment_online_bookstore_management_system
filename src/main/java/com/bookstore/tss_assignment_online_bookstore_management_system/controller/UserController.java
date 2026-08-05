@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.controll
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserUpdateRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> update(@PathVariable Long userId, @Valid @RequestBody UserRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long userId, @Valid @RequestBody UserUpdateRequestDto requestDto) {
         return ResponseEntity.ok(userService.update(userId, requestDto));
     }
 

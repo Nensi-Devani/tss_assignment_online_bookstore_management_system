@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.service.
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserUpdateRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.User;
 import com.bookstore.tss_assignment_online_bookstore_management_system.enums.Status;
 import com.bookstore.tss_assignment_online_bookstore_management_system.exception.DuplicateResourceException;
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto update(Long userId, UserRequestDto requestDto) {
+    public UserResponseDto update(Long userId, UserUpdateRequestDto requestDto) {
         logger.info("Updating user. UserId={}", userId);
 
         User user = userRepository.findById(userId)
@@ -83,11 +84,6 @@ public class UserServiceImpl implements UserService {
                     logger.warn("User not found. UserId={}", userId);
                     return new ResourceNotFoundException("User not found.");
                 });
-
-        if (!user.getEmail().equalsIgnoreCase(requestDto.getEmail()) && userRepository.existsByEmail(requestDto.getEmail())) {
-            logger.warn("Email already exists. Email={}", requestDto.getEmail());
-            throw new DuplicateResourceException("Email already exists.");
-        }
 
         userMapper.updateEntity(requestDto, user);
 
