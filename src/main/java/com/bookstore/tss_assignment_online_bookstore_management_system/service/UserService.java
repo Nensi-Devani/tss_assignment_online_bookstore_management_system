@@ -1,9 +1,9 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserUpdateRequestDto;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
@@ -12,7 +12,7 @@ public interface UserService {
 
     UserResponseDto getById(Long userId);
 
-    Page<UserResponseDto> getAll(Pageable pageable);
+    PageResponseDto<UserResponseDto> getAll(Pageable pageable);
 
     UserResponseDto update(Long userId, UserUpdateRequestDto requestDto);
 

@@ -1,12 +1,12 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.controller;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserUpdateRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<UserResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(userService.getAll(pageable));
     }
 

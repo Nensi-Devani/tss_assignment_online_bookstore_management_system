@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service.implementation;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.user.UserUpdateRequestDto;
@@ -10,6 +11,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.exception
 import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.UserMapper;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.UserRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.UserService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<UserResponseDto> getAll(Pageable pageable) {
         logger.info(
                 "Fetching all users. Page={}, Size={}",
                 pageable.getPageNumber(),
@@ -72,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
         logger.info("Retrieved {} users.", users.getNumberOfElements());
 
-        return users;
+        return PageUtil.toPageResponse(users);
     }
 
     @Override
