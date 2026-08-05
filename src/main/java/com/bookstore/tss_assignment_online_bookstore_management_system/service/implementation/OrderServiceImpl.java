@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service.implementation;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.order.OrderItemRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.order.OrderRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.order.OrderResponseDto;
@@ -15,6 +16,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.repositor
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.OrderRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.UserRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.OrderService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<OrderResponseDto> getAll(Pageable pageable) {
         logger.info(
                 "Fetching all orders. Page={}, Size={}",
                 pageable.getPageNumber(),
@@ -134,11 +136,11 @@ public class OrderServiceImpl implements OrderService {
 
         logger.info("Retrieved {} orders.", orders.getNumberOfElements());
 
-        return orders;
+        return PageUtil.toPageResponse(orders);
     }
 
     @Override
-    public Page<OrderResponseDto> getOrdersByUser(Long userId, Pageable pageable) {
+    public PageResponseDto<OrderResponseDto> getOrdersByUser(Long userId, Pageable pageable) {
         logger.info("Fetching orders for UserId={}", userId);
 
         if (!userRepository.existsById(userId)) {
@@ -155,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
                 userId
         );
 
-        return orders;
+        return PageUtil.toPageResponse(orders);
     }
 
     @Override

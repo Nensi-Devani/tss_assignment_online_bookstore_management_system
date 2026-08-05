@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.controller;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.order.OrderRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.order.OrderResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.OrderService;
@@ -29,12 +30,12 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<OrderResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<OrderResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(orderService.getAll(pageable));
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<OrderResponseDto>> getOrdersByUser(@PathVariable Long userId, Pageable pageable) {
+    public ResponseEntity<PageResponseDto<OrderResponseDto>> getOrdersByUser(@PathVariable Long userId, Pageable pageable) {
         return ResponseEntity.ok(orderService.getOrdersByUser(userId, pageable));
     }
 

@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service.implementation;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.userprofile.UserProfileRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.userprofile.UserProfileResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.User;
@@ -11,6 +12,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.Us
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.UserProfileRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.UserRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.UserProfileService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +73,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public Page<UserProfileResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<UserProfileResponseDto> getAll(Pageable pageable) {
         logger.info(
                 "Fetching all user profiles. Page={}, Size={}",
                 pageable.getPageNumber(),
@@ -83,7 +85,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         logger.info("Retrieved {} user profiles.", profiles.getNumberOfElements());
 
-        return profiles;
+        return PageUtil.toPageResponse(profiles);
     }
 
     @Override

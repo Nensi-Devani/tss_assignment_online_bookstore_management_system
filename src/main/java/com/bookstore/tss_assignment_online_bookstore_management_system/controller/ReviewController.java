@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.controller;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.review.ReviewRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.review.ReviewResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.ReviewService;
@@ -31,7 +32,7 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ReviewResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<ReviewResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(reviewService.getAll(pageable));
     }
 

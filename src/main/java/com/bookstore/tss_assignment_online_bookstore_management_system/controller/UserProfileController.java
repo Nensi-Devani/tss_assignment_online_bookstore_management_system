@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.controller;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.userprofile.UserProfileRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.userprofile.UserProfileResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.UserProfileService;
@@ -29,7 +30,7 @@ public class UserProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserProfileResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<UserProfileResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(userProfileService.getAll(pageable));
     }
 

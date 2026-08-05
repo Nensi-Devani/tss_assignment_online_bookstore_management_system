@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service.implementation;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.publisher.PublisherRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.publisher.PublisherResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Publisher;
@@ -9,6 +10,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.exception
 import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.PublisherMapper;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.PublisherRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.PublisherService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +61,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public Page<PublisherResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<PublisherResponseDto> getAll(Pageable pageable) {
         logger.info(
                 "Fetching all publishers. Page={}, Size={}",
                 pageable.getPageNumber(),
@@ -71,7 +73,7 @@ public class PublisherServiceImpl implements PublisherService {
 
         logger.info("Retrieved {} publishers.", publishers.getNumberOfElements());
 
-        return publishers;
+        return PageUtil.toPageResponse(publishers);
     }
 
     @Override

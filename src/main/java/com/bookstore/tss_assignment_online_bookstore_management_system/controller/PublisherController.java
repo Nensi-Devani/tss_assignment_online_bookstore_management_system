@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.controller;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.publisher.PublisherRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.publisher.PublisherResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.PublisherService;
@@ -29,7 +30,7 @@ public class PublisherController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PublisherResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<PublisherResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(publisherService.getAll(pageable));
     }
 

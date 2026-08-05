@@ -3,6 +3,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.service.
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookUpdateRequestDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Author;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Book;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Category;
@@ -14,6 +15,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.Bo
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.*;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.BookService;
 import com.bookstore.tss_assignment_online_bookstore_management_system.specification.BookSpecification;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +99,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<BookResponseDto> getAll(Pageable pageable) {
         logger.info("Fetching all books. Page: {}, Size: {}",
                 pageable.getPageNumber(),
                 pageable.getPageSize());
@@ -107,7 +109,7 @@ public class BookServiceImpl implements BookService {
 
         logger.info("Fetched {} books.", books.getNumberOfElements());
 
-        return books;
+        return PageUtil.toPageResponse(books);
     }
 
     @Override
@@ -158,7 +160,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookResponseDto> search(String title, Long categoryId, Long authorId, Double price, Boolean inStock, Pageable pageable) {
+    public PageResponseDto<BookResponseDto> search(String title, Long categoryId, Long authorId, Double price, Boolean inStock, Pageable pageable) {
         logger.info(
                 "Searching books. Title={}, CategoryId={}, AuthorId={}, Price={}, InStock={}, Page={}, Size={}",
                 title,
@@ -182,7 +184,7 @@ public class BookServiceImpl implements BookService {
 
         logger.info("Search completed successfully. {} books found.", books.getTotalElements());
 
-        return books;
+        return PageUtil.toPageResponse(books);
     }
 
     @Override

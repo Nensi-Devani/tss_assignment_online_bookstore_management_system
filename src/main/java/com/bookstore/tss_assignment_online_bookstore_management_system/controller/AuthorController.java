@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.controll
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.author.AuthorRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.author.AuthorResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AuthorResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<AuthorResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(authorService.getAll(pageable));
     }
 

@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.review.ReviewRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.review.ReviewResponseDto;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ public interface ReviewService {
 
     ReviewResponseDto getById(Long reviewId);
 
-    Page<ReviewResponseDto> getAll(Pageable pageable);
+    PageResponseDto<ReviewResponseDto> getAll(Pageable pageable);
 
     List<ReviewResponseDto> getReviewsByBook(Long bookId);
 

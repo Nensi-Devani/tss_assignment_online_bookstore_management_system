@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service.implementation;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.review.ReviewRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.review.ReviewResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Book;
@@ -11,6 +12,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.repositor
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.ReviewRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.UserRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.ReviewService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Page<ReviewResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<ReviewResponseDto> getAll(Pageable pageable) {
         logger.info("Fetching all reviews. Page={}, Size={}",
                 pageable.getPageNumber(),
                 pageable.getPageSize());
@@ -85,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         logger.info("Retrieved {} reviews.", reviews.getNumberOfElements());
 
-        return reviews;
+        return PageUtil.toPageResponse(reviews);
     }
 
     @Override

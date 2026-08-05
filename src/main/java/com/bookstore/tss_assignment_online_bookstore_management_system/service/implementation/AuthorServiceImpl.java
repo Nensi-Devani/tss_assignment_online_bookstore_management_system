@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.service.
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.author.AuthorRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.author.AuthorResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Author;
 import com.bookstore.tss_assignment_online_bookstore_management_system.enums.Status;
 import com.bookstore.tss_assignment_online_bookstore_management_system.exception.DuplicateResourceException;
@@ -9,6 +10,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.exception
 import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.AuthorMapper;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.AuthorRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.AuthorService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +62,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Page<AuthorResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<AuthorResponseDto> getAll(Pageable pageable) {
         logger.info("Fetching all authors. Page: {}, Size: {}",
                 pageable.getPageNumber(),
                 pageable.getPageSize());
@@ -70,7 +72,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         logger.info("Fetched {} authors.", authors.getNumberOfElements());
 
-        return authors;
+        return PageUtil.toPageResponse(authors);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.controll
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookUpdateRequestDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<BookResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<BookResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(bookService.getAll(pageable));
     }
 
@@ -48,7 +49,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<BookResponseDto>> search(
+    public ResponseEntity<PageResponseDto<BookResponseDto>> search(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long authorId,

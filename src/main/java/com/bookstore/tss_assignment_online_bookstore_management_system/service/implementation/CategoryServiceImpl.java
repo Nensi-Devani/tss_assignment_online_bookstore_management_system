@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.service.
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.category.CategoryRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.category.CategoryResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Category;
 import com.bookstore.tss_assignment_online_bookstore_management_system.enums.Status;
 import com.bookstore.tss_assignment_online_bookstore_management_system.exception.DuplicateResourceException;
@@ -9,6 +10,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.exception
 import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.CategoryMapper;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.CategoryRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.CategoryService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<CategoryResponseDto> getAll(Pageable pageable) {
         logger.info("Fetching all categories. Page={}, Size={}",
                 pageable.getPageNumber(),
                 pageable.getPageSize());
@@ -69,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         logger.info("Retrieved {} categories.", categories.getNumberOfElements());
 
-        return categories;
+        return PageUtil.toPageResponse(categories);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.service.implementation;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.payment.PaymentRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.payment.PaymentResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Order;
@@ -11,6 +12,7 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.Pa
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.OrderRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.PaymentRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.PaymentService;
+import com.bookstore.tss_assignment_online_bookstore_management_system.util.PageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -84,7 +86,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Page<PaymentResponseDto> getAll(Pageable pageable) {
+    public PageResponseDto<PaymentResponseDto> getAll(Pageable pageable) {
         logger.info(
                 "Fetching all payments. Page={}, Size={}",
                 pageable.getPageNumber(),
@@ -96,6 +98,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         logger.info("Retrieved {} payments.", payments.getNumberOfElements());
 
-        return payments;
+        return PageUtil.toPageResponse(payments);
     }
 }

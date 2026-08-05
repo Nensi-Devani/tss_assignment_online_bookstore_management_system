@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.controll
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.category.CategoryRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.category.CategoryResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoryResponseDto>> getAll(Pageable pageable){
+    public ResponseEntity<PageResponseDto<CategoryResponseDto>> getAll(Pageable pageable){
         return new ResponseEntity<>(categoryService.getAll(pageable), HttpStatus.OK);
     }
 

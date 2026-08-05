@@ -1,5 +1,6 @@
 package com.bookstore.tss_assignment_online_bookstore_management_system.controller;
 
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.payment.PaymentRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.payment.PaymentResponseDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.PaymentService;
@@ -29,7 +30,7 @@ public class PaymentController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PaymentResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PageResponseDto<PaymentResponseDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(paymentService.getAll(pageable));
     }
 }

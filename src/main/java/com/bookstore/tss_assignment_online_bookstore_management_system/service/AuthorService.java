@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.service;
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.author.AuthorRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.author.AuthorResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.common.PageResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,7 +14,7 @@ public interface AuthorService {
 
     AuthorResponseDto getById(Long authorId);
 
-    Page<AuthorResponseDto> getAll(Pageable pageable);
+    PageResponseDto<AuthorResponseDto> getAll(Pageable pageable);
 
     AuthorResponseDto update(Long authorId, AuthorRequestDto requestDto);
 
