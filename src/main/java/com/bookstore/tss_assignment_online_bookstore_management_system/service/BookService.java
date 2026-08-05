@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.service;
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookUpdateRequestDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,7 +15,7 @@ public interface BookService {
 
     Page<BookResponseDto> getAll(Pageable pageable);
 
-    BookResponseDto update(Long bookId, BookRequestDto requestDto);
+    BookResponseDto update(Long bookId, BookUpdateRequestDto requestDto);
 
     void delete(Long bookId);
 

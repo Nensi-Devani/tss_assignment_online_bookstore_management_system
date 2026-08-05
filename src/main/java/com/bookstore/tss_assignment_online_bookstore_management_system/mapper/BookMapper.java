@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.mapper;
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookUpdateRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,4 +31,8 @@ public interface BookMapper {
     @Mapping(target = "authors", ignore = true)
     void updateEntity(BookRequestDto dto, @MappingTarget Book book);
 
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "publisher", ignore = true)
+    @Mapping(target = "authors", ignore = true)
+    void updateEntity(BookUpdateRequestDto dto, @MappingTarget Book book);
 }

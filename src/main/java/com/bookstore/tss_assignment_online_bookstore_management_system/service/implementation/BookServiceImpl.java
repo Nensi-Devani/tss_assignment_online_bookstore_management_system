@@ -2,6 +2,7 @@ package com.bookstore.tss_assignment_online_bookstore_management_system.service.
 
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookResponseDto;
+import com.bookstore.tss_assignment_online_bookstore_management_system.dto.book.BookUpdateRequestDto;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Author;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Book;
 import com.bookstore.tss_assignment_online_bookstore_management_system.entity.Category;
@@ -110,30 +111,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponseDto update(Long bookId, BookRequestDto requestDto) {
+    public BookResponseDto update(Long bookId, BookUpdateRequestDto requestDto) {
         logger.info("Updating book with ID: {}", bookId);
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> {
                     logger.warn("Book not found with ID: {}", bookId);
                     return new ResourceNotFoundException("Book not found.");
-                });
-
-        if (!book.getIsbn().equals(requestDto.getIsbn()) && bookRepository.existsByIsbn(requestDto.getIsbn())) {
-            logger.warn("Another book already exists with ISBN: {}", requestDto.getIsbn());
-            throw new DuplicateResourceException("ISBN already exists.");
-        }
-
-        Category category = categoryRepository.findById(requestDto.getCategoryId())
-                .orElseThrow(() ->{
-                    logger.warn("Category not found with ID: {}", requestDto.getCategoryId());
-                    return new ResourceNotFoundException("Category not found.");
-                });
-
-        Publisher publisher = publisherRepository.findById(requestDto.getPublisherId())
-                .orElseThrow(() -> {
-                    logger.warn("Publisher not found with ID: {}", requestDto.getPublisherId());
-                    return new ResourceNotFoundException("Publisher not found.");
                 });
 
         Set<Author> authors = new HashSet<>(
@@ -147,8 +131,6 @@ public class BookServiceImpl implements BookService {
 
         bookMapper.updateEntity(requestDto, book);
 
-        book.setCategory(category);
-        book.setPublisher(publisher);
         book.setAuthors(authors);
 
         Book updatedBook = bookRepository.save(book);
