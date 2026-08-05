@@ -9,16 +9,13 @@ public class PageResponse<T> {
 
     private List<T> content;
 
-    private long totalElements;
+    private int numberOfElements;
 
-    private int totalPages;
-
-    private int currentPage;
+    private int pageNumber;
 
     private int pageSize;
 
-    private boolean first;
+    private long totalElements;
 
-    private boolean last;
-
+    private int totalPages;
 }
