@@ -10,6 +10,8 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.mapper.Us
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.UserRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,55 +20,98 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
     public UserResponseDto create(UserRequestDto requestDto) {
+        logger.info("Creating user. Email={}", requestDto.getEmail());
+
         if (userRepository.existsByEmail(requestDto.getEmail())) {
+            logger.warn("Email already exists. Email={}", requestDto.getEmail());
             throw new DuplicateResourceException("Email already exists.");
         }
 
         User user = userMapper.toEntity(requestDto);
 
-        return userMapper.toResponseDto(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+
+        logger.info("User created successfully. UserId={}", savedUser.getUserId());
+
+        return userMapper.toResponseDto(savedUser);
     }
 
     @Override
     public UserResponseDto getById(Long userId) {
+        logger.info("Fetching user. UserId={}", userId);
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                .orElseThrow(() -> {
+                    logger.warn("User not found. UserId={}", userId);
+                    return new ResourceNotFoundException("User not found.");
+                });
+
+        logger.info("User fetched successfully. UserId={}", userId);
 
         return userMapper.toResponseDto(user);
     }
 
     @Override
     public Page<UserResponseDto> getAll(Pageable pageable) {
-        return userRepository.findAll(pageable)
+        logger.info(
+                "Fetching all users. Page={}, Size={}",
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+
+        Page<UserResponseDto> users = userRepository.findAll(pageable)
                 .map(userMapper::toResponseDto);
+
+        logger.info("Retrieved {} users.", users.getNumberOfElements());
+
+        return users;
     }
 
     @Override
     public UserResponseDto update(Long userId, UserRequestDto requestDto) {
+        logger.info("Updating user. UserId={}", userId);
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                .orElseThrow(() -> {
+                    logger.warn("User not found. UserId={}", userId);
+                    return new ResourceNotFoundException("User not found.");
+                });
 
         if (!user.getEmail().equalsIgnoreCase(requestDto.getEmail()) && userRepository.existsByEmail(requestDto.getEmail())) {
+            logger.warn("Email already exists. Email={}", requestDto.getEmail());
             throw new DuplicateResourceException("Email already exists.");
         }
 
         userMapper.updateEntity(requestDto, user);
 
-        return userMapper.toResponseDto(userRepository.save(user));
+        User updatedUser = userRepository.save(user);
+
+        logger.info("User updated successfully. UserId={}", updatedUser.getUserId());
+
+        return userMapper.toResponseDto(updatedUser);
     }
 
     @Override
     public void delete(Long userId) {
+        logger.info("Deleting user. UserId={}", userId);
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                .orElseThrow(() -> {
+                    logger.warn("User not found. UserId={}", userId);
+                    return new ResourceNotFoundException("User not found.");
+                });
 
         user.setStatus(Status.DELETED);
 
         userRepository.save(user);
+
+        logger.info("User marked as DELETED. UserId={}", userId);
     }
 }

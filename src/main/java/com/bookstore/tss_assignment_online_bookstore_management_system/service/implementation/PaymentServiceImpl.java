@@ -13,6 +13,8 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.repositor
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.PaymentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final PaymentMapper paymentMapper;
@@ -31,8 +35,13 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentResponseDto create(PaymentRequestDto requestDto) {
+        logger.info("Processing payment for OrderId={}", requestDto.getOrderId());
+
         Order order = orderRepository.findById(requestDto.getOrderId())
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
+                .orElseThrow(() -> {
+                    logger.warn("Order not found. OrderId={}", requestDto.getOrderId());
+                    return new ResourceNotFoundException("Order not found.");
+                });
 
         Payment payment = paymentMapper.toEntity(requestDto);
 
@@ -46,20 +55,47 @@ public class PaymentServiceImpl implements PaymentService {
 
         orderRepository.save(order);
 
-        return paymentMapper.toResponseDto(paymentRepository.save(payment));
+        Payment savedPayment = paymentRepository.save(payment);
+
+        logger.info(
+                "Payment completed successfully. PaymentId={}, OrderId={}, Amount={}, TransactionId={}",
+                savedPayment.getPaymentId(),
+                order.getOrderId(),
+                savedPayment.getAmount(),
+                savedPayment.getTransactionId()
+        );
+
+        return paymentMapper.toResponseDto(savedPayment);
     }
 
     @Override
     public PaymentResponseDto getById(Long paymentId) {
+        logger.info("Fetching payment. PaymentId={}", paymentId);
+
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment not found."));
+                .orElseThrow(() -> {
+                    logger.warn("Payment not found. PaymentId={}", paymentId);
+                    return new ResourceNotFoundException("Payment not found.");
+                });
+
+        logger.info("Payment fetched successfully. PaymentId={}", paymentId);
 
         return paymentMapper.toResponseDto(payment);
     }
 
     @Override
     public Page<PaymentResponseDto> getAll(Pageable pageable) {
-        return paymentRepository.findAll(pageable)
+        logger.info(
+                "Fetching all payments. Page={}, Size={}",
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+
+        Page<PaymentResponseDto> payments = paymentRepository.findAll(pageable)
                 .map(paymentMapper::toResponseDto);
+
+        logger.info("Retrieved {} payments.", payments.getNumberOfElements());
+
+        return payments;
     }
 }

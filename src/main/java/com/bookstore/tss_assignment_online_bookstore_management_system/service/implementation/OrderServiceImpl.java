@@ -15,6 +15,8 @@ import com.bookstore.tss_assignment_online_bookstore_management_system.repositor
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.OrderRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.repository.UserRepository;
 import com.bookstore.tss_assignment_online_bookstore_management_system.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final UserRepository userRepository;
@@ -36,8 +40,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderResponseDto placeOrder(OrderRequestDto requestDto) {
+        logger.info("Placing order for UserId={}", requestDto.getUserId());
+
         User user = userRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                .orElseThrow(() -> {
+                    logger.warn("User not found. UserId={}", requestDto.getUserId());
+                    return new ResourceNotFoundException("User not found.");
+                });
 
         Order order = new Order();
         order.setUser(user);
@@ -50,9 +59,18 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderItemRequestDto itemDto : requestDto.getOrderItems()) {
             Book book = bookRepository.findById(itemDto.getBookId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Book not found."));
+                    .orElseThrow(() -> {
+                        logger.warn("Book not found. BookId={}", itemDto.getBookId());
+                        return new ResourceNotFoundException("Book not found.");
+                    });
 
             if (book.getStock() < itemDto.getQuantity()) {
+                logger.warn(
+                        "Insufficient stock. BookId={}, Available={}, Requested={}",
+                        book.getBookId(),
+                        book.getStock(),
+                        itemDto.getQuantity()
+                );
                 throw new IllegalArgumentException("Insufficient stock for book : " + book.getTitle());
             }
 
@@ -76,40 +94,83 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTotalAmount(totalAmount);
 
-        return orderMapper.toResponseDto(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+
+        logger.info(
+                "Order placed successfully. OrderId={}, UserId={}, TotalAmount={}",
+                savedOrder.getOrderId(),
+                user.getUserId(),
+                savedOrder.getTotalAmount()
+        );
+
+        return orderMapper.toResponseDto(savedOrder);
     }
 
     @Override
     public OrderResponseDto getById(Long orderId) {
+        logger.info("Fetching order. OrderId={}", orderId);
+
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
+                .orElseThrow(() -> {
+                    logger.warn("Order not found. OrderId={}", orderId);
+                    return new ResourceNotFoundException("Order not found.");
+                });
+
+        logger.info("Order fetched successfully. OrderId={}", orderId);
 
         return orderMapper.toResponseDto(order);
     }
 
     @Override
     public Page<OrderResponseDto> getAll(Pageable pageable) {
-        return orderRepository.findAll(pageable)
+        logger.info(
+                "Fetching all orders. Page={}, Size={}",
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+
+        Page<OrderResponseDto> orders = orderRepository.findAll(pageable)
                 .map(orderMapper::toResponseDto);
+
+        logger.info("Retrieved {} orders.", orders.getNumberOfElements());
+
+        return orders;
     }
 
     @Override
     public Page<OrderResponseDto> getOrdersByUser(Long userId, Pageable pageable) {
+        logger.info("Fetching orders for UserId={}", userId);
+
         if (!userRepository.existsById(userId)) {
+            logger.warn("User not found. UserId={}", userId);
             throw new ResourceNotFoundException("User not found.");
         }
 
-        return orderRepository.findByUserUserId(userId, pageable)
+        Page<OrderResponseDto> orders =  orderRepository.findByUserUserId(userId, pageable)
                 .map(orderMapper::toResponseDto);
+
+        logger.info(
+                "Retrieved {} orders for UserId={}",
+                orders.getNumberOfElements(),
+                userId
+        );
+
+        return orders;
     }
 
     @Override
     @Transactional
     public OrderResponseDto cancelOrder(Long orderId) {
+        logger.info("Cancelling order. OrderId={}", orderId);
+
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
+                .orElseThrow(() -> {
+                    logger.warn("Order not found. OrderId={}", orderId);
+                    return new ResourceNotFoundException("Order not found.");
+                });
 
         if (order.getOrderStatus() == OrderStatus.CANCELLED) {
+            logger.warn("Order is already cancelled. OrderId={}", orderId);
             throw new IllegalArgumentException("Order is already cancelled.");
         }
 
@@ -122,6 +183,10 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderStatus(OrderStatus.CANCELLED);
 
-        return orderMapper.toResponseDto(orderRepository.save(order));
+        Order cancelledOrder = orderRepository.save(order);
+
+        logger.info("Order cancelled successfully. OrderId={}", cancelledOrder.getOrderId());
+
+        return orderMapper.toResponseDto(cancelledOrder);
     }
 }
